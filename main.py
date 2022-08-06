@@ -12,6 +12,7 @@ CREATE_USERS_TABLE_SQL = "CREATE TABLE IF NOT EXISTS users (\
 )"
 
 exit_program = False
+current_user = None
 UNALLOWED_USERNAME_CHARACTERS = set("~!@#$%^&*()_+=-|\\}{][\"';:,./<>?")
 
 def exit_program_choice():
@@ -62,6 +63,8 @@ def create_new_user_choice():
     global db_connection
     db_connection.commit()
     
+    print("User {} was created.".format(requested_username))
+
     return None 
 
 def login_choice():
@@ -80,14 +83,18 @@ def login_choice():
     )
 
     results = db_cursor.fetchall()
-    hash = results[0][1].encode()
-    if bcrypt.checkpw(password, hash):
-        print("You've successfully signed in")
-        current_user = username
+
+    if (len(results) > 0):
+        hash = results[0][1].encode()
+        if bcrypt.checkpw(password, hash):
+            print("You've successfully signed in")
+            current_user = username
+        else:
+            print("Username / Password combination not found")
     else:
         print("Username / Password combination not found")
-        
-        
+
+    return None
 
 
 menu1 = {
