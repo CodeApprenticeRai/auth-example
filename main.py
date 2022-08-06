@@ -33,7 +33,7 @@ def create_new_user_choice():
     username_is_available = False
     global db_cursor
 
-    while ((not username_is_valid) and (not username_is_available)):
+    while ((not username_is_valid) or (not username_is_available)):
     # get username and validate against db
         requested_username = input("Enter New Username:  ")
         
@@ -47,7 +47,7 @@ def create_new_user_choice():
             db_cursor.execute("SELECT username, password FROM users WHERE username = '{}' LIMIT 1".format(requested_username))
             result = db_cursor.fetchall()
             if (len(result) > 0):
-                print(result)
+                print("Username '{}' is already taken".format(requested_username))
             else:
                 username_is_available = True
     
