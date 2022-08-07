@@ -29,8 +29,8 @@ class Application:
         #user sees menu2 if logged in
         self.menu2 = {
             0 : ("Exit", self.exit_program),
+            1 : ("Logout", self.logout)
         }
-
 
     def exit_program(self):
         self._exit_program = True
@@ -100,7 +100,7 @@ class Application:
 
         self.db_connection.commit()
         
-        print("User {} was created.".format(requested_username))
+        print("\nUser {} was created.".format(requested_username))
 
         return None 
 
@@ -126,13 +126,18 @@ class Application:
         if (len(results) > 0):
             hash = results[0][1].encode()
             if bcrypt.checkpw(password, hash):
-                print("You've successfully signed in")
+                print("\nYou've successfully signed in.\n")
                 self.current_user = username
             else:
                 print("Username / Password combination not found")
         else:
             print("Username / Password combination not found")
 
+        return None
+
+    def logout(self):
+        self.current_user = None
+        print("\nYou have successfully logged out.\n")
         return None
 
     def use_menu1(self):
@@ -142,7 +147,7 @@ class Application:
             user_choice = None
 
             #print menu1 options
-            print("Please enter an integer corresponding to one of the following options:\n")
+            print("\nPlease enter an integer corresponding to one of the following options:\n")
             for key in self.menu1:
                 print("{} : {}".format(key, self.menu1[key][0]))
             
@@ -150,7 +155,7 @@ class Application:
             try:
                 user_choice = int(input("Choice: "))
             except ValueError:
-                print("That was not a valid choice. Please try again.")
+                print("\nThat was not a valid choice. Please try again.")
                 continue
 
             
@@ -172,7 +177,7 @@ class Application:
             user_choice = None
 
             #print menu1 options
-            print("Please enter an integer corresponding to one of the following options:\n")
+            print("\nPlease enter an integer corresponding to one of the following options:\n")
             for key in self.menu2:
                 print("{} : {}".format(key, self.menu2[key][0]))
             
@@ -193,7 +198,6 @@ class Application:
         # perform selected choice
         self.menu2[validated_choice][1]()
         return None
-
 
     def main_loop(self):
         while (not self._exit_program):
